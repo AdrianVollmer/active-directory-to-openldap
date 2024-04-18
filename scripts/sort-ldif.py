@@ -2,12 +2,12 @@
 
 import argparse
 import base64
-from ldif import LDIFParser, LDIFWriter
-
 from collections import OrderedDict
 
+from ldif import LDIFParser, LDIFWriter
 
-class LdifParse(LDIFParser):
+
+class IndexParser(LDIFParser):
 
     def parse(self):
         """Build the index, which is a dict mapping the DN to the position in
@@ -62,14 +62,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    parser = LdifParse(open(args.src, "rb"))
+    parser = IndexParser(open(args.src, "rb"))
     parser.parse()
 
     writer = LDIFWriter(open(args.dst, "wb"))
 
     for dn in parser.index:
         entry = parser[dn]
-        writer.unparse(dn, entry[1])
 
         # Sometimes AD returns objects with ONLY a dn. OpenLDAP won't import
         # that. Add OU as dummy.
@@ -77,3 +76,4 @@ if __name__ == "__main__":
         if "objectClass" not in entry[1]:
             entry[1]["objectClass"] = ["top", "organizationalUnit"]
 
+        writer.unparse(dn, entry[1])
