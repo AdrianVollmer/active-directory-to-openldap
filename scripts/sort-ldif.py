@@ -70,3 +70,10 @@ if __name__ == "__main__":
     for dn in parser.index:
         entry = parser[dn]
         writer.unparse(dn, entry[1])
+
+        # Sometimes AD returns objects with ONLY a dn. OpenLDAP won't import
+        # that. Add OU as dummy.
+
+        if "objectClass" not in entry[1]:
+            entry[1]["objectClass"] = ["top", "organizationalUnit"]
+
