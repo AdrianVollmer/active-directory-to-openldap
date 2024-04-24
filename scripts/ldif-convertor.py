@@ -14,8 +14,12 @@ class ActiveDirectoryToOpenLdapLDIFConvertor(LDIFParser):
                                     'CN=_Template\, ': { 'user': 'customActiveDirectoryUserTemplate' }
                                   }
 
-    objectclassMappings = { 'top' : 'mstop', 'user' : 'customActiveDirectoryUser', 'group' : 'customActiveDirectoryGroup',
-                            'contact' : 'customActiveDirectoryContact' }
+    objectclassMappings = {
+        'top' : 'mstop',
+        #  'user' : 'customActiveDirectoryUser',
+        #  'group' : 'customActiveDirectoryGroup',
+        #  'contact' : 'customActiveDirectoryContact',
+    }
 
     attributetypesValuesDuplicates = [ 'dSCorePropagationData' ]
 

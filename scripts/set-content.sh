@@ -18,11 +18,9 @@ do
   fi
   echo "Converting: ${DATALDIFABS}"
   python ${D}/scripts/ldif-convertor.py --src=${DATALDIF}.tmp --dst=${DATALDIF}.tmp.tmp
-  echo "Sorting: ${DATALDIFABS}"
-  python ${D}/scripts/sort-ldif.py --src=${DATALDIF}.tmp.tmp --dst=${DATALDIF}.tmp.tmp.tmp
   echo "Importing: ${DATALDIFABS}"
-  time ldapadd -c -D "cn=Manager,${ROOTDN}" -y ${D}/passwdfile.conf -f ${DATALDIF}.tmp.tmp.tmp
-  rm -f ${DATALDIF}.tmp*
+  time ldapadd -D "cn=Manager,${ROOTDN}" -y ${D}/passwdfile.conf -f ${DATALDIF}.tmp.tmp
+  #  rm -f ${DATALDIF}.tmp*
   echo "Processing done: ${DATALDIFABS}"
 done
 

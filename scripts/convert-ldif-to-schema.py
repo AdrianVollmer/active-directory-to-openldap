@@ -25,11 +25,11 @@ attributetype ( %(attribute_id)s
 
 objectclassMappings = {
     "top": "mstop",
-    "user": "customActiveDirectoryUser",
-    "group": "customActiveDirectoryGroup",
+    #  "user": "customActiveDirectoryUser",
+    #  "group": "customActiveDirectoryGroup",
     #  "attributeSchema": "olcSchemaConfig",
     #  "configuration": "olcGlobal",
-    "contact": "customActiveDirectoryContact",
+    #  "contact": "customActiveDirectoryContact",
 }
 
 # Resources:
@@ -278,11 +278,16 @@ def parse_record(record, class_tree, attribute_list):
 
 def resolve_auxiliary_classes(tree):
     # Merge attributes because openLDAP does not support this kind of auxiliary
-    # class
+    # class. Do this recursively.
+
+    def merge_attributes_from_auxiliary_classes(block):
+        for cls in block["auxiliary_class"]:
+            merge_attributes_from_auxiliary_classes(tree[cls]["block"])
+            block["may"].extend(tree[cls]["block"]["may"])
+            block["must"].extend(tree[cls]["block"]["must"])
+
     for name, node in tree.items():
-        for cls in node["block"]["auxiliary_class"]:
-            node["block"]["may"].extend(tree[cls]["block"]["may"])
-            node["block"]["must"].extend(tree[cls]["block"]["must"])
+        merge_attributes_from_auxiliary_classes(node["block"])
 
 
 def write_class_block(fp, tree, name):

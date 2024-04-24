@@ -82,7 +82,7 @@ kadmin.local -q "ktadd -k /etc/krb5.keytab ldap/$(hostname)@EXAMPLE.COM"
 chown ldap /etc/krb5.keytab
 
 cd scripts;
-
+./get-ldif.sh
 ./set-default-slapd.sh
 ./set-content.sh
 
