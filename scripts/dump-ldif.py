@@ -12,7 +12,7 @@ def dump_base(base, args, schema=None):
         schema = "ldap"
         extra_args = "-ZZ"
 
-    dn = ",".join("DC="+dc for dc in args.target_domain.split("."))
+    dn = ",".join("DC=" + dc for dc in args.target_domain.split("."))
 
     cmd = [
         "ldapsearch",
@@ -43,7 +43,7 @@ def dump_base(base, args, schema=None):
 
     os.makedirs(args.output_dir, exist_ok=True)
 
-    with open(filename, 'w') as fp:
+    with open(filename, "w") as fp:
         subprocess.run(
             cmd,
             env=dict(LDAPTLS_REQCERT="never"),

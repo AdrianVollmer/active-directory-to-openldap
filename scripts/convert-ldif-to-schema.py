@@ -172,7 +172,7 @@ OPERATIONAL_ATTRIBUTES = [
     "createTimeStamp",
     "modifyTimeStamp",
     "subSchemaSubEntry",
-    ]  # TODO!!!
+]  # TODO!!!
 
 
 def parse_attribute(record, attribute_list):
@@ -223,14 +223,8 @@ def parse_class(record, class_tree):
     else:
         name = record["cn"][0]
 
-    must = (
-        record.get("systemMustContain", [])
-        + record.get("mustContain", [])
-    )
-    may = (
-        record.get("systemMayContain", [])
-        + record.get("mayContain", [])
-    )
+    must = record.get("systemMustContain", []) + record.get("mustContain", [])
+    may = record.get("systemMayContain", []) + record.get("mayContain", [])
 
     parent = record["subClassOf"][0]
     class_id = record["governsID"][0]
@@ -252,13 +246,12 @@ def parse_class(record, class_tree):
         class_category=mapMSObjectClassCategoryToOpenLdapKind[
             record["objectClassCategory"][0]
         ],
-        may=may+must,
+        may=may + must,
         must=[],
         # Note: AD returns objects where `must` fields are missing. I don't
         # give a F*CK anymore, make them all optional.
         auxiliary_class=(
-            record.get("systemAuxiliaryClass", [])
-            + record.get("auxiliaryClass", [])
+            record.get("systemAuxiliaryClass", []) + record.get("auxiliaryClass", [])
         ),
     )
 
@@ -307,10 +300,12 @@ def write_class_block(fp, tree, name):
     # Write to file
     must = list(set(block["must"]) - set(OPERATIONAL_ATTRIBUTES))
     may = list(set(block["may"]) - set(OPERATIONAL_ATTRIBUTES))
-    block.update(dict(
-        may=" $\n ".join(sorted(may)),
-        must=" $\n ".join(sorted(must)),
-    ))
+    block.update(
+        dict(
+            may=" $\n ".join(sorted(may)),
+            must=" $\n ".join(sorted(must)),
+        )
+    )
 
     out = CLASS % block
     # Remove empty lines

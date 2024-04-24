@@ -17,11 +17,11 @@ class IndexParser(LDIFParser):
 
         pos = 0
         for block in self._iter_blocks():
-            first_line = block[0].partition(b'\n')[0]
+            first_line = block[0].partition(b"\n")[0]
 
-            if first_line.startswith(b'dn: '):
+            if first_line.startswith(b"dn: "):
                 dn = first_line[4:].decode()
-            elif first_line.startswith(b'dn:: '):
+            elif first_line.startswith(b"dn:: "):
                 dn = first_line[5:]
                 dn = base64.b64decode(dn).decode()
             else:
@@ -34,9 +34,7 @@ class IndexParser(LDIFParser):
 
         # Sort by length of dn. This way ensures that parent objects will be
         # inserted before child objects.
-        self.index = OrderedDict(
-            sorted(self.index.items(), key=lambda x: len(x[0]))
-        )
+        self.index = OrderedDict(sorted(self.index.items(), key=lambda x: len(x[0])))
 
     def __getitem__(self, dn):
         """Access the entry in the file"""
@@ -56,9 +54,7 @@ if __name__ == "__main__":
     )
 
     parser.add_argument("--src", metavar="SOURCE", help="Source ldif")
-    parser.add_argument(
-        "--dst", metavar="DESTINATION", help="Destination ldif"
-    )
+    parser.add_argument("--dst", metavar="DESTINATION", help="Destination ldif")
 
     args = parser.parse_args()
 
